@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Recommendations</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        .container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .job-title {
+            font-weight: bold;
+        }
+        button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Job Recommendations</h1>
+        <p>Selected Seniority Level: {{ seniority_level }}</p>
+        <p>Selected Employment Type: {{ employment_type }}</p>
+        <p>Selected Roles of Interest: {{ ", ".join(selected_roles) }}</p>
+        <a href="/search_gpt">Wanna be specific? Try our SearchGPT</a>
+        <a href="refresh">update Recommendations</a>
+        <h2>Recommended Jobs</h2>
+        <ul>
+            {% for job in jobs %}
+            <li>
+                <p class="job-title">Title: {{ job['title'] }}</p>
+                <p>Company: {{ job['company_name'] }}</p>
+                <p>Location: {{ job['location'] }}</p>
+                <p>Seniority Level: {{ job['seniority'] }}</p>
+                <p>Employment Type: {{ job['employment_type'] }}</p>
+                <p>Functional Roles: {{ ", ".join(job['job_functions_collection']) }}</p>
+                <p>Industries: {{ ", ".join(job['job_industries_collection']) }}</p>
+                <form action="/feedback" method="post" style="display: inline;">
+                    <input type="hidden" name="job_id" value="{{ job['id'] }}">
+                    <input type="hidden" name="sl" value="{{ job['seniority'] }}">
+                    <input type="hidden" name="et" value="{{ job['employment_type'] }}">
+                    {% for role in job['job_functions_collection'] %}
+                    <input type="hidden" name="roles" value="{{ role }}">
+                    {% endfor %}
+                    <button type="submit" name="feedback" value="relevant">Relevant</button>
+                </form>
+                <form action="/feedback" method="post" style="display: inline;">
+                    <input type="hidden" name="job_id" value="{{ job['id'] }}">
+                    <input type="hidden" name="sl" value="{{ job['seniority'] }}">
+                    <input type="hidden" name="et" value="{{ job['employment_type'] }}">
+                    {% for role in job['job_functions_collection'] %}
+                    <input type="hidden" name="roles" value="{{ role }}">
+                    {% endfor %}
+                    <button type="submit" name="feedback" value="not_relevant">Not Relevant</button>
+                </form>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>
