@@ -341,7 +341,7 @@ def feedback():
     elif feedback_type == "not_relevant":
         non_relevant_jobs.append(job_vector)
 
-    # Redirect back to the results page (or another appropriate page)
+    # Redirect back to the results page 
     return render_template('results.html',jobs=recom_jobs)
 
 
